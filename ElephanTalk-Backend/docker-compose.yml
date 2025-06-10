@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  nestjs-api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./API/.env
+    networks:
+      - backend-network
+
+  fastapi-service:
+    build:
+      context: ./MicroserviceModeration
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
