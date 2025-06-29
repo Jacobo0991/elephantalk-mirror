@@ -23,6 +23,12 @@ export class Post {
     lng: number;
   };
 
+  @Prop({ required: false, trim: true})
+  country: string;
+
+  @Prop({ required: false, trim: true})
+  city: string;
+
   @Prop({ default: true })
   active: boolean;
 

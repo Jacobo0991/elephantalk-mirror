@@ -24,6 +24,15 @@ export class CreatePostDto {
   @ValidateNested()
   @Type(() => LocationDto)
   location?: LocationDto;
+
+  @IsOptional()
+  @IsString()
+  country: string;
+
+  @IsOptional()
+  @IsString()
+  city: string;
+
 }
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {}
