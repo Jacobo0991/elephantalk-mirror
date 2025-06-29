@@ -1,0 +1,2 @@
+Open a console and execute:
+java -jar photon-opensearch-0.7.0.jar -cors-any
