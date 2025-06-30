@@ -11,6 +11,24 @@ export class Post {
   @Prop({ required: true, trim: true })
   image: string;
 
+  @Prop({
+    type: {
+      lat: { type: Number },
+      lng: { type: Number },
+    },
+    required: false,
+  })
+  location?: {
+    lat: number;
+    lng: number;
+  };
+
+  @Prop({ required: false, trim: true})
+  country: string;
+
+  @Prop({ required: false, trim: true})
+  city: string;
+
   @Prop({ default: true })
   active: boolean;
 

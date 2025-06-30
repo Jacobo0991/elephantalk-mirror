@@ -30,7 +30,9 @@ export class PostService {
 
     if (results.isToxic) throw new NotAcceptableException(results.tags);
 
+    console.log("Sending post body:", data);
     const newPost = new this.postModel({ ...data, user: id });
+    //const newPost = new this.postModel({CreatePostDto});
     return await newPost.save();
   }
 

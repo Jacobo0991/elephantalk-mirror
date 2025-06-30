@@ -1,6 +1,15 @@
 import { PartialType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsString, IsUrl, MinLength } from 'class-validator';
+import { IsString, IsOptional, IsObject, IsNumber, IsUrl, MinLength, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class LocationDto {
+  @IsNumber()
+  lat: number;
+
+  @IsNumber()
+  lng: number;
+}
 
 export class CreatePostDto {
   @IsString()
@@ -10,6 +19,20 @@ export class CreatePostDto {
 
   @IsUrl()
   image: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LocationDto)
+  location?: LocationDto;
+
+  @IsOptional()
+  @IsString()
+  country: string;
+
+  @IsOptional()
+  @IsString()
+  city: string;
+
 }
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {}
