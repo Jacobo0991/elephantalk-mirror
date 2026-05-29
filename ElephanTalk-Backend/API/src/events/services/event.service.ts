@@ -158,7 +158,6 @@ export class EventService {
         if (!event) {
             throw new NotFoundException('Event not found.');
         }
-        console.log(event);
         if (!event.user._id.equals(userId)) {
             throw new ForbiddenException('Forbidden to update this event.');
         }
