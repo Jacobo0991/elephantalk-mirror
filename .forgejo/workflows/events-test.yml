@@ -10,6 +10,14 @@ jobs:
   test:
     runs-on: backend-events
 
+    env:
+      NODE_ENV: test
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      PORT: ${{ secrets.PORT }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      TOXICITY_URL: ${{ secrets.TOXICITY_URL }}
+      TOXICITY_THRESHOLD: ${{ secrets.TOXICITY_THRESHOLD }}
+
     steps:
       - uses: actions/checkout@v4
 
