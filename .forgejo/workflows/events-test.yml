@@ -1,0 +1,30 @@
+name: Backend Events Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  test:
+    runs-on: backend-events
+
+    defaults:
+      run:
+        working-directory: ElephantTalk-Backend/API
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Unit Tests
+        run: npm test -- events
+
+      - name: E2E Tests
+        run: npm run test:e2e -- events
