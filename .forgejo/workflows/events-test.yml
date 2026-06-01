@@ -13,22 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start services
-        working-directory: ElephanTalk-Backend/
-        run: docker compose up -d --build fastapi-service
-
-      - name: Wait for moderation service
-        run: |
-          timeout 180 bash -c '
-            until curl -X POST \
-              -H "Content-Type: application/json" \
-              -d "{\"content\":\"hello\"}" \
-              http://localhost:8000/moderate > /dev/null 2>&1
-            do
-              echo "Waiting for moderation service..."
-              sleep 5
-            done
-          '
       - uses: actions/setup-node@v4
         with:
           node-version: 22
