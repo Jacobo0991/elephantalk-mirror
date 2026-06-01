@@ -27,13 +27,3 @@ jobs:
       - name: E2E Tests
         working-directory: ElephanTalk-Backend/API
         run: npm run test:e2e -- events
-
-      - name: Show compose logs
-        working-directory: ElephanTalk-Backend
-        if: failure()
-        run: docker compose logs
-
-      - name: Shutdown services
-        working-directory: ElephanTalk-Backend
-        if: always()
-        run: docker compose down
