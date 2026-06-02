@@ -158,7 +158,6 @@ export class EventService {
         if (!event) {
             throw new NotFoundException('Event not found.');
         }
-        console.log(event);
         if (!event.user._id.equals(userId)) {
             throw new ForbiddenException('Forbidden to update this event.');
         }
@@ -273,7 +272,7 @@ export class EventService {
 
     async toggleAttendance(id: Types.ObjectId, userId: Types.ObjectId) {
         const event = await this.findOneById(id);
-
+        console.log(event);
         if (!event) {
             throw new NotFoundException('Event not found.');
         }
@@ -288,10 +287,10 @@ export class EventService {
         }
 
         let { attendees } = event;
-        const isAttending = attendees.some((a) => a.equals(userId));
+        const isAttending = attendees.some((a) => a._id.equals(userId));
 
         if (isAttending) {
-            attendees = attendees.filter((a) => !a.equals(userId));
+            attendees = attendees.filter((a) => !a._id.equals(userId));
         } else {
             // Check capacity before adding
             if (event.capacity && attendees.length >= event.capacity) {
