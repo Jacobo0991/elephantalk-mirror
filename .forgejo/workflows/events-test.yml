@@ -10,9 +10,13 @@ jobs:
   test:
     runs-on: backend-events
 
-    defaults:
-      run:
-        working-directory: ElephantTalk-Backend/API
+    env:
+      NODE_ENV: test
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      PORT: ${{ secrets.PORT }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      TOXICITY_URL: ${{ secrets.TOXICITY_URL }}
+      TOXICITY_THRESHOLD: ${{ secrets.TOXICITY_THRESHOLD }}
 
     steps:
       - uses: actions/checkout@v4
@@ -21,10 +25,13 @@ jobs:
         with:
           node-version: 22
 
-      - run: npm ci
+      - working-directory: ElephanTalk-Backend/API
+        run: npm ci
 
       - name: Unit Tests
+        working-directory: ElephanTalk-Backend/API
         run: npm test -- events
 
       - name: E2E Tests
+        working-directory: ElephanTalk-Backend/API
         run: npm run test:e2e -- events
