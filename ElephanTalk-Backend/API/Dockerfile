@@ -13,9 +13,6 @@ RUN npm install
 # Copia el resto de los archivos de la aplicación
 COPY . .
 
-# Copia el archivo .env
-COPY .env .env
-
 # Compila el proyecto
 RUN npm run build
 

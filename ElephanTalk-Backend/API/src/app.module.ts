@@ -8,6 +8,7 @@ import { PostModule } from './posts/posts.module';
 import { ToxicityReportsModule } from './toxicity-reports/toxicity-reports.module';
 import { ToxicityDetectorModule } from './toxicity-detector/toxicity-detector.module';
 import appConfig from 'src/config/app.config';
+import { EventModule } from './events/event.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import appConfig from 'src/config/app.config';
     AuthModule,
     UsersModule,
     PostModule,
+    EventModule,
     ToxicityReportsModule,
     ToxicityDetectorModule,
   ],
