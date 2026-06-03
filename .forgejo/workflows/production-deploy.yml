@@ -11,10 +11,10 @@ jobs:
     runs-on: [self-hosted, backend]
 
     steps:
-      - name: Checkout code
+      - name: Checkout workflow repository
         uses: actions/checkout@v4
 
-      - name: Go to project folder
+      - name: Update deployment repository
         env:
           DEPLOY_FOLDER: ${{ secrets.DEPLOY_FOLDER }}
         run: |
@@ -22,33 +22,37 @@ jobs:
 
           cd "$DEPLOY_FOLDER"
 
-      - name: Updating repository...
-        run: |
           git fetch origin
           git reset --hard origin/main
 
-          cd ElephanTalk-Backend
-
-      - name:  Rebuilding container...
+      - name: Stop FastAPI service
+        env:
+          DEPLOY_FOLDER: ${{ secrets.DEPLOY_FOLDER }}
         run: |
-          docker compose stop  elephantalk-backend-fastapi-service-1 || true
+          cd "$DEPLOY_FOLDER/ElephanTalk-Backend"
 
-          echo "Removing FastAPI container..."
-          docker compose rm -f elephantalk-backend-fastapi-service-1 || true
+          docker compose stop fastapi-service || true
+          docker compose rm -f fastapi-service || true
 
-          echo "Removing FastAPI image..."
-          IMAGE_ID=$(docker images -q elephantalk-backend-fastapi-service 2>/dev/null || true)
-
-          if [ ! -z "$IMAGE_ID" ]; then
-            docker rmi -f "$IMAGE_ID" || true
-          fi
-
-          echo "Cleaning unused Docker resources..."
+      - name: Clean old Docker images
+        run: |
           docker image prune -af || true
 
-          echo "Rebuilding and starting services..."
+      - name: Rebuild and start services
+        env:
+          DEPLOY_FOLDER: ${{ secrets.DEPLOY_FOLDER }}
+        run: |
+          cd "$DEPLOY_FOLDER/ElephanTalk-Backend"
+
           docker compose up -d --build
 
-      - name: Completed
+      - name: Verify deployment
+        env:
+          DEPLOY_FOLDER: ${{ secrets.DEPLOY_FOLDER }}
         run: |
-          echo "Deployment completed."
+          cd "$DEPLOY_FOLDER/ElephanTalk-Backend"
+
+          docker compose ps
+
+      - name: Deployment completed
+        run: echo "Deployment completed."
