@@ -1,0 +1,54 @@
+name: ElephanTalk CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    name: Deploy Application
+
+    runs-on: [self-hosted, backend]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Go to project folder
+        env:
+          DEPLOY_FOLDER: ${{ secrets.DEPLOY_FOLDER }}
+        run: |
+          set -e
+
+          cd "$DEPLOY_FOLDER"
+
+      - name: Updating repository...
+        run: |
+          git fetch origin
+          git reset --hard origin/main
+
+          cd ElephanTalk-Backend
+
+      - name:  Rebuilding container...
+        run: |
+          docker compose stop  elephantalk-backend-fastapi-service-1 || true
+
+          echo "Removing FastAPI container..."
+          docker compose rm -f elephantalk-backend-fastapi-service-1 || true
+
+          echo "Removing FastAPI image..."
+          IMAGE_ID=$(docker images -q elephantalk-backend-fastapi-service 2>/dev/null || true)
+
+          if [ ! -z "$IMAGE_ID" ]; then
+            docker rmi -f "$IMAGE_ID" || true
+          fi
+
+          echo "Cleaning unused Docker resources..."
+          docker image prune -af || true
+
+          echo "Rebuilding and starting services..."
+          docker compose up -d --build
+
+      - name: Completed
+        run: |
+          echo "Deployment completed."
